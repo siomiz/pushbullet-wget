@@ -1,6 +1,11 @@
 var PushBullet = require('pushbullet');
 var exec = require('child_process').exec;
 
+if(!('ACCESS_TOKEN' in process.env)){
+  throw new Error('-e ACCESS_TOKEN is missing');
+  return -1;
+}
+
 var pusher = new PushBullet(process.env.ACCESS_TOKEN);
 
 var _nickname = process.env.NICKNAME || process.env.HOSTNAME;
@@ -37,7 +42,7 @@ function start_stream(){
           if(push.target_device_iden == _iden){
             if(push.type == 'link' && !push.dismissed){
               console.log(String.fromCharCode(0xd83d, 0xdcbe) + '  ' + push.url);
-              var child = exec('wget --content-disposition -P ' + _prefix + ' ' + push.url, function(err, stdout, stderr){
+              var child = exec('wget --content-disposition -P ' + _prefix + ' ' + "'" + push.url + "'", function(err, stdout, stderr){
                 if(err){
                   throw err;
                 }else{
