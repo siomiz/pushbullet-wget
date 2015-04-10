@@ -45,10 +45,11 @@ function start_stream(){
                 if(err){
                   throw err;
                 }else{
-                  console.log('[' + this.pid + ':DONE]  ' + push.url);
+                  console.log('[DONE:' + push.cpid + ']  ' + push.url);
                 }
               });
-              console.log('[' + child.pid + ':SAVE]  ' + push.url);
+              console.log('[SAVE:' + child.pid + ']  ' + push.url);
+              push.cpid = child.pid;
             }
             pusher.updatePush(push.iden, {dismissed: true},
               function(error, response){
