@@ -41,14 +41,14 @@ function start_stream(){
           _since = push.modified;
           if(push.target_device_iden == _iden){
             if(push.type == 'link' && !push.dismissed){
-              console.log(String.fromCharCode(0xd83d, 0xdcbe) + '  ' + push.url);
               var child = exec('wget --content-disposition -P ' + _prefix + ' ' + "'" + push.url + "'", function(err, stdout, stderr){
                 if(err){
                   throw err;
                 }else{
-                  console.log(unescape('%u2713') + '  ' + push.url);
+                  console.log('[' + this.pid + ':DONE]  ' + push.url);
                 }
               });
+              console.log('[' + child.pid + ':SAVE]  ' + push.url);
             }
             pusher.updatePush(push.iden, {dismissed: true},
               function(error, response){
