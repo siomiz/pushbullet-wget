@@ -12,6 +12,7 @@ var _nickname = process.env.NICKNAME || process.env.HOSTNAME;
 var _prefix = process.env.PREFIX || '/tmp';
 var _iden = null;
 var _since = 0;
+var stream = null;
 
 console.log('nickname=' + _nickname);
 
@@ -19,7 +20,7 @@ function start_stream(){
 
   console.log('iden=' + _iden);
 
-  var stream = pusher.stream();
+  stream = pusher.stream();
 
   stream.on('connect', function(){
     console.log('connected');
@@ -45,7 +46,8 @@ function start_stream(){
                 if(err){
                   throw err;
                 }else{
-                  console.log('[DONE:' + push.cpid + ']  ' + push.url);
+                  saved = stderr.match(/\'(.*)\' saved \[([0-9]+)/);
+                  console.log('[DONE:' + push.cpid + ']  ' + saved[1] + ' ' + saved[2]);
                 }
               });
               console.log('[SAVE:' + child.pid + ']  ' + push.url);
@@ -101,3 +103,7 @@ pusher.devices(function(error, response){
 
 });
 
+process.on('SIGINT', function(){
+  stream.close();
+  process.exit(0);
+});
